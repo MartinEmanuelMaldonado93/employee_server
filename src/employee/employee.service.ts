@@ -47,13 +47,12 @@ export class EmployeeService {
     return this.employees[index];
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     const index = this.employees.findIndex((emp) => emp.id === id);
     if (index !== -1) {
       this.employees.splice(index, 1);
-      // return index;
     } else {
-      return "id doesn't exist";
+      throw new NotFoundException(`Employee with ID ${id} not found`);
     }
   }
 }

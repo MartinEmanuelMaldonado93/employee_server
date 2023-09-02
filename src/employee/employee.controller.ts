@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { delay, of } from 'rxjs';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { EmployeeService } from './employee.service';
@@ -34,12 +35,12 @@ export class EmployeeController {
 
   @Get()
   findAll() {
-    return this.employeeService.findAll();
+    return of(this.employeeService.findAll()).pipe(delay(2000));
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.employeeService.findOne(+id);
+    return of(this.employeeService.findOne(+id)).pipe(delay(2000));
   }
 
   @Patch(':id')
@@ -47,11 +48,24 @@ export class EmployeeController {
     @Param('id') id: string,
     @Body() updateEmployeeDto: UpdateEmployeeDto,
   ) {
-    return this.employeeService.update(+id, updateEmployeeDto);
+    return of(this.employeeService.update(+id, updateEmployeeDto)).pipe(
+      delay(2000),
+    );
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.employeeService.remove(+id);
+    try {
+      this.employeeService.remove(+id);
+      return {
+        message: 'succesfully deleted',
+        data: `user id deleted ${id}`,
+      };
+    } catch (error) {
+      return {
+        message: 'Id incorrect or not founded, user does not deleted',
+        data: id,
+      };
+    }
   }
 }
