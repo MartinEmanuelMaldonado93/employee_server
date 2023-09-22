@@ -3,12 +3,13 @@ import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { fakeEmployees } from './employeeFake';
 import { Employee } from './entities/employee.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class EmployeeService {
   private employees: Employee[];
 
-  constructor() {
+  constructor(private configService: ConfigService) {
     this.employees = fakeEmployees;
   }
 
@@ -25,6 +26,9 @@ export class EmployeeService {
   }
 
   findAll(): Employee[] {
+    const user = this.configService.get('database', { infer: true });
+    console.log(user);
+    
     return this.employees;
   }
 
