@@ -11,6 +11,7 @@ export class EnvsService {
     const portConfig =
       this.configService.get<EnvConfig['serverConfig']>('serverConfig');
 
+    console.log(`######## ${database}, ${portConfig}`);
     return {
       databaseUrl: database.databaseUrl,
       port: portConfig.port,
